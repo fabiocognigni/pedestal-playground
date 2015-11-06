@@ -3,7 +3,8 @@
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http.route.definition :refer [defroutes]]
-            [ring.util.response :as ring-resp]))
+            [ring.util.response :as ring-resp]
+            [pedestal-playground.interceptor :as interceptor]))
 
 (defn about-page
   [request]
@@ -15,13 +16,22 @@
   [request]
   (ring-resp/response "Hello World!"))
 
+(defn sleep
+  [request]
+  (do
+    (Thread/sleep 20)
+    (ring-resp/response "Woken up!")))
+
 (defroutes routes
   ;; Defines "/" and "/about" routes with their associated :get handlers.
   ;; The interceptors defined after the verb map (e.g., {:get home-page}
   ;; apply to / and its children (/about).
   [[["/" {:get home-page}
-     ^:interceptors [(body-params/body-params) bootstrap/html-body]
-     ["/about" {:get about-page}]]]])
+     ^:interceptors [(body-params/body-params)
+                     bootstrap/html-body
+                     interceptor/log-time]
+     ["/about" {:get about-page}]
+     ["/sleep" {:get sleep}]]]])
 
 ;; Consumed by pedestal-playground.server/create-server
 ;; See bootstrap/default-interceptors for additional options you can configure

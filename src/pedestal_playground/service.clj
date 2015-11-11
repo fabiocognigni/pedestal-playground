@@ -22,6 +22,10 @@
     (Thread/sleep 20)
     (ring-resp/response "Woken up!")))
 
+(defn forbidden-resource
+  [request]
+  (ring-resp/response "You shouldn't see this!"))
+
 (defroutes routes
   ;; Defines "/" and "/about" routes with their associated :get handlers.
   ;; The interceptors defined after the verb map (e.g., {:get home-page}
@@ -31,7 +35,9 @@
                      bootstrap/html-body
                      interceptor/log-time]
      ["/about" {:get about-page}]
-     ["/sleep" {:get sleep}]]]])
+     ["/sleep" {:get sleep}]
+     ["/forbidden" {:get forbidden-resource}
+      ^:interceptors [interceptor/forbidden]]]]])
 
 ;; Consumed by pedestal-playground.server/create-server
 ;; See bootstrap/default-interceptors for additional options you can configure

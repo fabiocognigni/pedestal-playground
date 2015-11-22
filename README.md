@@ -19,9 +19,12 @@ with `lein run`.
 
 From REPL:
 
-1. (server/start runnable-service)
-2. Go to [localhost:8080](http://localhost:8080/)
-3. (server/stop runnable-service)
+1.
+2. `(run-dev)` or (def dev-serv (run-dev))
+3. Go to [localhost:8080](http://localhost:8080/)
+4. make code changes
+5. re-require/reload routes (service.clj)
+6. refresh [localhost:8080](http://localhost:8080/)
 
 
 ## Configuration
